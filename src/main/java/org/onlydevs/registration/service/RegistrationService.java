@@ -39,7 +39,7 @@ public class RegistrationService {
             .orElseThrow(() -> NoSuchElementException("Course with id: " + id + "does not exist"));
     Registration registration = Registration.builder().user(user).course(course).build();
     registrationRepository.save(registration);
-    var event = SendEmailRequested.builder().to(user.getEmail()).build();
+    var event = SendEmailRequested.builder().to(user.getEmail()).body("Welcome to the course!!!").build();
     eventProducer.accept(List.of(event));
   }
 }

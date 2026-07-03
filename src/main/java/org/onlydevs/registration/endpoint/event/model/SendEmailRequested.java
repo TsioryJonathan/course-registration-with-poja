@@ -21,6 +21,9 @@ public class SendEmailRequested extends PojaEvent {
   @JsonProperty("to")
   private String to;
 
+  @JsonProperty("body")
+  private String body;
+
   @Override
   public Duration maxConsumerDuration() {
     return Duration.ofSeconds(45);
