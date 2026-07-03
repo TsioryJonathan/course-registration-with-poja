@@ -13,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
 public class Course {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

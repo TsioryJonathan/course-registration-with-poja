@@ -12,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
 public class EmailUser {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

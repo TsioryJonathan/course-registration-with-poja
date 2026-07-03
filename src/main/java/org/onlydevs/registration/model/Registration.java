@@ -14,6 +14,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
 public class Registration {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
