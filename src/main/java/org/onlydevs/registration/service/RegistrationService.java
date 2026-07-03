@@ -6,6 +6,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.onlydevs.registration.endpoint.event.EventProducer;
 import org.onlydevs.registration.endpoint.event.model.SendEmailRequested;
+import org.onlydevs.registration.model.EmailUser;
 import org.onlydevs.registration.model.Registration;
 import org.onlydevs.registration.repository.CourseRepository;
 import org.onlydevs.registration.repository.EmailRepository;
@@ -36,7 +37,8 @@ public class RegistrationService {
             .orElseThrow(
                 () -> new NoSuchElementException("Course with id: " + courseId + "does not exist"));
     var registration = Registration.builder().user(user).course(course).build();
-    registrationRepository.save(registration);
+    var savedRegistration = registrationRepository.save(registration);
+    emailRepository.save(EmailUser.builder().registration(savedRegistration).build());
     var event =
         SendEmailRequested.builder()
             .to(user.getEmail())
