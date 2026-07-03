@@ -1,4 +1,4 @@
-package org.onlydevs.registration.service;
+package org.onlydevs.registration.service.event;
 
 import java.util.List;
 import java.util.NoSuchElementException;
