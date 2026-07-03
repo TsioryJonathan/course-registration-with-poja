@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 import lombok.*;
 
-@Table("\"user\"")
+@Table(name = "\"user\"")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

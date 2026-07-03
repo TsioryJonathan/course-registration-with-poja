@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.UUID;
 import lombok.*;
 
-@Table("\"course\"")
+@Table(name = "\"course\"")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
