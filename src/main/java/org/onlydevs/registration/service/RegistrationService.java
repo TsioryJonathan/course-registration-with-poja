@@ -38,7 +38,10 @@ public class RegistrationService {
     var registration = Registration.builder().user(user).course(course).build();
     registrationRepository.save(registration);
     var event =
-        SendEmailRequested.builder().to(user.getEmail()).body("Welcome to the course!!!").build();
+        SendEmailRequested.builder()
+            .to(user.getEmail())
+            .body("Successful registration for course + " + course.getTitle())
+            .build();
     eventProducer.accept(List.of(event));
   }
 }
