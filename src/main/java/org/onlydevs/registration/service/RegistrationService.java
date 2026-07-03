@@ -3,13 +3,10 @@ package org.onlydevs.registration.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.onlydevs.registration.endpoint.event.EventProducer;
 import org.onlydevs.registration.endpoint.event.model.SendEmailRequested;
-import org.onlydevs.registration.model.Course;
 import org.onlydevs.registration.model.Registration;
-import org.onlydevs.registration.model.User;
 import org.onlydevs.registration.repository.CourseRepository;
 import org.onlydevs.registration.repository.EmailRepository;
 import org.onlydevs.registration.repository.RegistrationRepository;
@@ -18,8 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class RegistrationService {
   private final RegistrationRepository registrationRepository;
   private final EmailRepository emailRepository;
@@ -29,15 +25,17 @@ public class RegistrationService {
 
   @Transactional
   public void register(UUID userId, UUID courseId) {
-    User user =
+    var user =
         userRepository
             .findById(userId)
-            .orElseThrow(() -> NoSuchElementException("User with id:" + id + " does not exist."));
-    Course course =
+            .orElseThrow(
+                () -> new NoSuchElementException("User with id:" + userId + " does not exist."));
+    var course =
         courseRepository
             .findById(courseId)
-            .orElseThrow(() -> NoSuchElementException("Course with id: " + id + "does not exist"));
-    Registration registration = Registration.builder().user(user).course(course).build();
+            .orElseThrow(
+                () -> new NoSuchElementException("Course with id: " + courseId + "does not exist"));
+    var registration = Registration.builder().user(user).course(course).build();
     registrationRepository.save(registration);
     var event = SendEmailRequested.builder().to(user.getEmail()).build();
     eventProducer.accept(List.of(event));
