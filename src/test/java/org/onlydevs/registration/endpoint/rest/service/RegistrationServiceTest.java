@@ -62,4 +62,13 @@ public class RegistrationServiceTest {
 
     verifyNoInteractions(registrationRepository, emailRepository, eventProducer);
   }
+
+  @Test
+  void register_courseNotFound_throws() {
+    when(userRepository.findById(userID)).thenReturn(Optional.of(mock(User.class)));
+    when(courseRepository.findById(courseID)).thenReturn(Optional.empty());
+    assertThrows(NoSuchElementException.class, () -> service.register(userID, courseID));
+
+    verifyNoInteractions(registrationRepository, emailRepository, eventProducer);
+  }
 }
