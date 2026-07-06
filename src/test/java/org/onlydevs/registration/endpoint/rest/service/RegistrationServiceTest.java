@@ -1,10 +1,11 @@
 package org.onlydevs.registration.endpoint.rest.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -52,5 +53,13 @@ public class RegistrationServiceTest {
     verify(registrationRepository).save(any());
     verify(emailRepository).save(any());
     verify(eventProducer).accept(anyList());
+  }
+
+  @Test
+  void register_userNotFound_throws() {
+    when(userRepository.findById(userID)).thenReturn(Optional.empty());
+    assertThrows(NoSuchElementException.class, () -> service.register(userID, courseID));
+
+    verifyNoInteractions(registrationRepository, emailRepository, eventProducer);
   }
 }
