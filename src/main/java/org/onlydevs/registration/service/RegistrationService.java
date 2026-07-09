@@ -48,6 +48,11 @@ public class RegistrationService {
                 () ->
                     new NoSuchElementException("Course with id: " + courseId + " does not exist"));
 
+    if (registrationRepository.existsByUserIdAndCourseId(userId, courseId)) {
+      throw new IllegalStateException(
+          "User " + user.getEmail() + " is already registered for course " + course.getTitle());
+    }
+
     var registration = Registration.builder().user(user).course(course).build();
     var savedRegistration = registrationRepository.save(registration);
     emailRepository.save(EmailUser.builder().registration(savedRegistration).build());
