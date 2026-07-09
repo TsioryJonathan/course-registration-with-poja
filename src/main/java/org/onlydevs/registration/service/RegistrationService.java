@@ -18,6 +18,8 @@ import org.onlydevs.registration.repository.RegistrationRepository;
 import org.onlydevs.registration.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class RegistrationService {
   private final EventProducer<SendEmailRequested> eventProducer;
   private final PdfGenerationService pdfGenerationService;
   private final BucketComponent bucketComponent;
+  private final SpringTemplateEngine templateEngine;
 
   @Transactional
   @SneakyThrows
@@ -66,15 +69,14 @@ public class RegistrationService {
 
     String url = bucketComponent.presign(bucketKey, Duration.ofHours(1)).toString();
 
-    var event =
-        SendEmailRequested.builder()
-            .to(user.getEmail())
-            .body(
-                "Successful registration for course "
-                    + course.getTitle()
-                    + " you can download your invoice here "
-                    + url)
-            .build();
+    var context = new Context();
+    context.setVariable("user", user);
+    context.setVariable("course", course);
+    context.setVariable("invoiceUrl", url);
+
+    var htmlBody = templateEngine.process("registration-confirmation", context);
+
+    var event = SendEmailRequested.builder().to(user.getEmail()).body(htmlBody).build();
     eventProducer.accept(List.of(event));
   }
 }
