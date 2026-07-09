@@ -54,7 +54,7 @@ public class RegistrationService {
     }
 
     var registration = Registration.builder().user(user).course(course).build();
-    var savedRegistration = registrationRepository.save(registration);
+    var savedRegistration = registrationRepository.saveAndFlush(registration);
     emailRepository.save(EmailUser.builder().registration(savedRegistration).build());
 
     var pdf = pdfGenerationService.generateInvoice(registration);
